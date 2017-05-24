@@ -1,6 +1,1 @@
-<html>
-  <strong>youh</strong>
-  <br />
-  <?php echo 'tata';  ?>
-  
-</html>
+<?php echo json_encode($_GET);  ?>
