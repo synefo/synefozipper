@@ -4,11 +4,12 @@ $zipStr = 'UEsDBBQACAgIAChyuEoAAAAAAAAAAAAAAAAyAAAAdW5wYWNrYWdlZC9vYmplY3RzL05vd
 $basedata =  base64_decode($zipStr);
 $f = fopen ("data.zip","x+");
 fwrite($f, $basedata);
-fclose($f);
+
 
 header('Content-Type: application/zip');
 header('Content-Length: ' . filesize($f));
 header('Content-Disposition: attachment; filename="file.zip"');
 readfile($f);
+fclose($f);
 unlink($f);
 ?>
