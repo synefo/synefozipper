@@ -1,1 +1,6 @@
-<?php header( 'Location: /index.html' ) ;  ?>
+<html>
+  <strong>youh</strong>
+  <br />
+  <?php echo 'toto';  ?>
+  
+</html>
