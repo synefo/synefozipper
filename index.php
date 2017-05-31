@@ -3,6 +3,7 @@ header('Content-type: application/json');
 $folderName = uniqid();
 $zipFileName = $folderName . '.zip';
 
+
 if(!isset($_POST['zipContent'])){
 	http_response_code(400);
 	return;
@@ -14,6 +15,7 @@ if(!$zipStr){
 	http_response_code(400);
 	return;
 }
+
 
 
 $basedata =  base64_decode($zipStr);
@@ -29,30 +31,57 @@ if ($zip->open($zipFileName, ZipArchive::CREATE)!== TRUE) {
 
    
 $zip->extractTo($folderName);
-
 $zip->close();
 
 
-$zipContent = new FileItem($folderName);
+if(isset($_POST['hierarchy']) && $_POST['hierarchy']){
+	
+	$zipContent = new FileItemRecursive($folderName);
+	
+}
+else{
+	
+	$files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator($folderName, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST); 
 
-
+	$zipContent = [];
+	foreach($files as $file){
+		
+		if($file->isFile())
+			array_push($zipContent, new FileItem($file));
+		else
+			rmdir($file->getRealpath());
+	}
+	
+	rmdir($folderName);
+}
 
 echo json_encode($zipContent);
 
 unlink($zipFileName);
 
 
-
-
 class FileItem{
+	
+	public $name;
+	public $data;
+	
+	public function FileItem($file){
+		
+		$this->name = $file->getFilename();
+		$this->data = base64_encode(file_get_contents($file->getRealpath()));
+		unlink($file->getRealpath());
+	}
+}
+
+
+class FileItemRecursive{
 	
 	public $type;
 	public $name;
 	public $children;
 	public $data;
 	
-	public function FileItem($extractPath){
-		
+	public function FileItemRecursive($extractPath){
 	
 		if(gettype($extractPath) == 'string'){
 			$this->name = $extractPath;
@@ -62,9 +91,9 @@ class FileItem{
 			
 			foreach ($files as $fileInfo){
 				if($fileInfo->isDir())
-					array_push($this->children, new FileItem($extractPath . '/' . $fileInfo->getFilename()));
+					array_push($this->children, new FileItemRecursive($extractPath . '/' . $fileInfo->getFilename()));
 				else
-					array_push($this->children, new FileItem($fileInfo));
+					array_push($this->children, new FileItemRecursive($fileInfo));
 			}
 			rmdir($extractPath);
 		}
@@ -75,7 +104,6 @@ class FileItem{
 			unlink($extractPath->getRealpath());
 		}
 			
-		
 	}
 }
 
