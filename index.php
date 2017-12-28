@@ -64,13 +64,13 @@ class FileItem{
 	
 	public $name;
 	public $data;
-	public $contentType;
+	public $extension;
 	
 	public function FileItem($file){
 		
 		$this->name = $file->getFilename();
 		$this->data = base64_encode(file_get_contents($file->getRealpath()));
-		$this->contentType = $file->getType();
+		$this->extension = $file->getExtension();
 		unlink($file->getRealpath());
 	}
 }
@@ -82,7 +82,7 @@ class FileItemRecursive{
 	public $name;
 	public $children;
 	public $data;
-	public $contentType;
+	public $extension;
 	
 	public function FileItemRecursive($extractPath){
 	
@@ -104,7 +104,7 @@ class FileItemRecursive{
 			$this->type = 'file';
 			$this->name = $extractPath->getFilename();
 			$this->data = base64_encode(file_get_contents($extractPath->getRealpath()));
-			$this->contentType = $extractPath->getType();
+			$this->extension = $extractPath->getExtension();
 			unlink($extractPath->getRealpath());
 		}
 			
