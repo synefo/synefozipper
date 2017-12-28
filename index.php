@@ -34,7 +34,7 @@ $zip->extractTo($folderName);
 $zip->close();
 
 
-if(isset($_POST['hierarchy']) && boolval($_POST['hierarchy'])){
+if(isset($_POST['hierarchy']) && filter_var($_POST['hierarchy'], FILTER_VALIDATE_BOOLEAN)){
 	
 	$zipContent = new FileItemRecursive($folderName);
 	
