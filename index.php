@@ -10,8 +10,7 @@ if(!isset($_POST['zipContent'])){
 }
 
 $zipStr = $_POST['zipContent'];
-echo $zipStr;
-return;
+
 if(!$zipStr){
 	http_response_code(400);
 	return;
