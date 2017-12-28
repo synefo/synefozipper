@@ -71,13 +71,16 @@ class FileItem{
 	public $name;
 	public $data;
 	public $folder;
+	public $folder2;
 	public $extension;
 	
 	public function FileItem($file, $baseFolder){
 		
 		$this->name = $file->getFilename();
 		$this->data = base64_encode(file_get_contents($file->getRealpath()));
-		$this->folder = str_replace('\\', '', str_replace($baseFolder, '', $file->getPathname()));
+		$this->folder = str_replace('\\', '', str_replace($baseFolder, '', $file->getPath()));
+		$this->folder2 = $file->getPathname();
+		//$this->folder3 = $file->getPathname();
 		$this->extension = $file->getExtension();
 		unlink($file->getRealpath());
 	}
