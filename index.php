@@ -3,6 +3,9 @@
 $folderName = uniqid();
 $zipFileName = $folderName . '.zip';
 
+echo json_encode($_GET);
+echo json_encode($_POST);
+
 echo json_encode($_SERVER);
 return;
 if(!isset($_POST['zipContent'])){
