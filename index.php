@@ -1,8 +1,8 @@
 <?php 
-//header('Content-type: application/json');
+header('Content-type: application/json');
 $folderName = uniqid();
 $zipFileName = $folderName . '.zip';
-
+/*
 echo json_encode($_GET);
 echo json_encode($_POST);
 
@@ -14,6 +14,8 @@ if(!isset($_POST['zipContent'])){
 }
 
 $zipStr = $_POST['zipContent'];
+*/
+$zipStr = file_get_contents('php://input');
 
 if(!$zipStr){
 	http_response_code(400);
@@ -38,7 +40,7 @@ $zip->extractTo($folderName);
 $zip->close();
 
 
-if(isset($_POST['hierarchy']) && filter_var($_POST['hierarchy'], FILTER_VALIDATE_BOOLEAN)){
+if(isset($_GET['hierarchy']) && filter_var($_GET['hierarchy'], FILTER_VALIDATE_BOOLEAN)){
 	
 	$zipContent = new FileItemRecursive($folderName);
 	
