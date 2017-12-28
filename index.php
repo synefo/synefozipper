@@ -73,11 +73,11 @@ class FileItem{
 	public $folder;
 	public $extension;
 	
-	public function FileItem($file){
+	public function FileItem($file, $folder){
 		
 		$this->name = $file->getFilename();
 		$this->data = base64_encode(file_get_contents($file->getRealpath()));
-		$this->folder = $file->getPath();
+		$this->folder = $folder;
 		$this->extension = $file->getExtension();
 		unlink($file->getRealpath());
 	}
