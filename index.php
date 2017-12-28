@@ -53,7 +53,7 @@ else{
 	foreach($files as $file){
 		
 		if($file->isFile())
-			array_push($zipContent, $folderName);
+			array_push($zipContent, new FileItem($file, $folderName));
 		else
 			rmdir($file->getRealpath());
 	}
