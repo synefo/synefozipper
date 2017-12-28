@@ -53,7 +53,7 @@ else{
 	foreach($files as $file){
 		
 		if($file->isFile())
-			array_push($zipContent, new FileItem($file, str_replace($folderName, '', $file->getPathname())));
+			array_push($zipContent, $folderName);
 		else
 			rmdir($file->getRealpath());
 	}
@@ -71,13 +71,19 @@ class FileItem{
 	public $name;
 	public $data;
 	public $folder;
+	public $folder2;
+	public $folder3;
 	public $extension;
 	
-	public function FileItem($file, $folder){
+	public function FileItem($file, $baseFolder){
 		
 		$this->name = $file->getFilename();
 		$this->data = base64_encode(file_get_contents($file->getRealpath()));
-		$this->folder = $folder;
+		$this->folder = $file->getPathname();
+			$this->folder2 = $file->getPath();
+			$this->folder3 = $file->getRealPath();
+		//new FileItem($file, str_replace(, '', $file->getPathname())
+			     
 		$this->extension = $file->getExtension();
 		unlink($file->getRealpath());
 	}
