@@ -3,7 +3,8 @@
 $folderName = uniqid();
 $zipFileName = $folderName . '.zip';
 
-
+echo $_SERVER;
+return;
 if(!isset($_POST['zipContent'])){
 	http_response_code(400);
 	return;
