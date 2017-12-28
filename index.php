@@ -1,9 +1,9 @@
 <?php 
-header('Content-type: application/json');
+//header('Content-type: application/json');
 $folderName = uniqid();
 $zipFileName = $folderName . '.zip';
 
-echo $_POST;
+echo json_encode($_POST);
 return;
 if(!isset($_POST['zipContent'])){
 	http_response_code(400);
