@@ -2,8 +2,7 @@
 header('Content-type: application/json');
 $folderName = uniqid();
 $zipFileName = $folderName . '.zip';
-echo json_encode(file_get_contents('php://input'));
-return;
+
 /*
 echo json_encode($_GET);
 echo json_encode($_POST);
@@ -26,7 +25,7 @@ if(!$zipStr){
 
 
 
-$basedata =  base64_decode($zipStr);
+$basedata =  $zipStr;//base64_decode($zipStr);
 $f = fopen ($zipFileName, "a+");
 fwrite($f, $basedata);
 fclose($f);
