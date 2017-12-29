@@ -89,14 +89,14 @@ class FileItemRecursive{
 			$this->name = $extractPath;
 			$this->type = 'dir';
 			$this->children = [];
-			$files = new FilesystemIterator($extractPath);
+			$files = new FilesystemIterator($extractPath, $ignoreMetaXml);
 			
 			foreach ($files as $fileInfo){
 				if(!$ignoreMetaXml || ($fileInfo->getFilename() != 'package.xml' && !strstr($fileInfo->getFilename(), '-meta.xml')))
-					array_push($this->children, new FileItemRecursive($extractPath . '/' . $fileInfo->getFilename()));
+					array_push($this->children, new FileItemRecursive($extractPath . '/' . $fileInfo->getFilename(), $ignoreMetaXml));
 				else{
 					if(includeFile($ignoreMetaXml, $file->getFilename())) 
-						array_push($this->children, new FileItemRecursive($fileInfo));
+						array_push($this->children, new FileItemRecursive($fileInfo, $ignoreMetaXml));
 				}
 			}
 			rmdir($extractPath);
