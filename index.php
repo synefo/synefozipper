@@ -28,7 +28,8 @@ $zip->extractTo($folderName);
 $zip->close();
 
 $ignoreMetaXml = isset($_GET['ignoreMetaXml']) && filter_var($_GET['ignoreMetaXml'], FILTER_VALIDATE_BOOLEAN);
-
+echo $ignoreMetaXml;
+return;
 if(isset($_GET['hierarchy']) && filter_var($_GET['hierarchy'], FILTER_VALIDATE_BOOLEAN)){
 	
 	$zipContent = new FileItemRecursive($folderName, $ignoreMetaXml);
