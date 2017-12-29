@@ -89,7 +89,7 @@ class FileItemRecursive{
 			$this->name = $extractPath;
 			$this->type = 'dir';
 			$this->children = [];
-			$files = new FilesystemIterator($extractPath, $ignoreMetaXml);
+			$files = new FilesystemIterator($extractPath);
 			
 			foreach ($files as $fileInfo){
 				if(!$ignoreMetaXml || ($fileInfo->getFilename() != 'package.xml' && !strstr($fileInfo->getFilename(), '-meta.xml')))
