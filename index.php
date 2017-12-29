@@ -42,7 +42,7 @@ else{
 	foreach($files as $file){
 		
 		if($file->isFile()){
-			if(includeFile($ignoreMetaXml, $file->getFilename()))
+			if(!$ignoreMetaXml || ($file->getFilename() != 'package.xml' && !strstr($file->getFilename(), '-meta.xml')))
 				array_push($zipContent, new FileItem($file, $folderName));	
 		}
 		else
@@ -56,9 +56,6 @@ echo json_encode($zipContent);
 
 unlink($zipFileName);
 
-public static function includeFile($ignoreMetaXml, $fileName){
-	return !$ignoreMetaXml || ($fileName != 'package.xml' && !strstr($fileName, '-meta.xml'));
-}
 
 class FileItem{
 	
@@ -95,7 +92,7 @@ class FileItemRecursive{
 			$files = new FilesystemIterator($extractPath);
 			
 			foreach ($files as $fileInfo){
-				if($fileInfo->isDir())
+				if(!$ignoreMetaXml || ($fileInfo->getFilename() != 'package.xml' && !strstr($fileInfo->getFilename(), '-meta.xml')))
 					array_push($this->children, new FileItemRecursive($extractPath . '/' . $fileInfo->getFilename()));
 				else{
 					if(includeFile($ignoreMetaXml, $file->getFilename())) 
