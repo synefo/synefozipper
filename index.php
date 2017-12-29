@@ -56,7 +56,7 @@ echo json_encode($zipContent);
 
 unlink($zipFileName);
 
-function includeFile($ignoreMetaXml, $fileName){
+public static function includeFile($ignoreMetaXml, $fileName){
 	return !$ignoreMetaXml || ($fileName != 'package.xml' && !strstr($fileName, '-meta.xml'));
 }
 
