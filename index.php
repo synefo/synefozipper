@@ -77,7 +77,7 @@ class FileItem{
 	public function FileItem($file, $baseFolder){
 		
 		$this->name = $file->getFilename();
-		$this->data = base64_encode(file_get_contents($file->getRealpath()));
+		$this->data = (file_get_contents($file->getRealpath()));
 		$this->folder = str_replace($baseFolder, '', $file->getPath());
 		$this->extension = $file->getExtension();
 		unlink($file->getRealpath());
