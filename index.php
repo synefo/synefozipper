@@ -28,8 +28,7 @@ $zip->extractTo($folderName);
 $zip->close();
 
 $ignoreMetaXml = isset($_GET['ignoreMetaXml']) && filter_var($_GET['ignoreMetaXml'], FILTER_VALIDATE_BOOLEAN);
-echo $ignoreMetaXml;
-return;
+
 if(isset($_GET['hierarchy']) && filter_var($_GET['hierarchy'], FILTER_VALIDATE_BOOLEAN)){
 	
 	$zipContent = new FileItemRecursive($folderName, $ignoreMetaXml);
@@ -43,7 +42,7 @@ else{
 	foreach($files as $file){
 		
 		if($file->isFile()){
-			if(!$ignoreMetaXml || $file->getFilename() != 'Package.xml' || !strstr($file->getFilename(), '-meta.xml')) 
+			if(includeFile($ignoreMetaXml, $file->getFilename()) 
 				array_push($zipContent, new FileItem($file, $folderName));	
 		}
 		else
@@ -57,6 +56,9 @@ echo json_encode($zipContent);
 
 unlink($zipFileName);
 
+public static function includeFile($ignoreMetaXml, $fileName){
+	return !$ignoreMetaXml || ($fileName != 'package.xml' && !strstr($fileName, '-meta.xml'));
+}
 
 class FileItem{
 	
@@ -96,7 +98,7 @@ class FileItemRecursive{
 				if($fileInfo->isDir())
 					array_push($this->children, new FileItemRecursive($extractPath . '/' . $fileInfo->getFilename()));
 				else{
-					if(!$ignoreMetaXml || $fileInfo->getFilename() != 'Package.xml' || !strstr($fileInfo->getFilename(), '-meta.xml')) 
+					if(includeFile($ignoreMetaXml, $file->getFilename()) 
 						array_push($this->children, new FileItemRecursive($fileInfo));
 				}
 			}
