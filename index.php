@@ -3,20 +3,7 @@ header('Content-type: application/json');
 $folderName = uniqid();
 $zipFileName = $folderName . '.zip';
 
-/*
-echo json_encode($_GET);
-echo json_encode($_POST);
-
-echo json_encode($_SERVER);
-return;
-if(!isset($_POST['zipContent'])){
-	http_response_code(400);
-	return;
-}
-
-$zipStr = $_POST['zipContent'];
-*/
-$zipStr = file_get_contents('php://input');
+contents('php://input');
 
 if(!$zipStr){
 	http_response_code(400);
@@ -25,9 +12,9 @@ if(!$zipStr){
 
 
 
-$basedata =  $zipStr;//base64_decode($zipStr);
+//$basedata =  base64_decode($zipStr);
 $f = fopen ($zipFileName, "a+");
-fwrite($f, $basedata);
+fwrite($f, $zipStr);
 fclose($f);
 
 $zip = new ZipArchive(); 
@@ -40,10 +27,11 @@ if ($zip->open($zipFileName, ZipArchive::CREATE)!== TRUE) {
 $zip->extractTo($folderName);
 $zip->close();
 
+$ignoreMetaXml = isset($_GET['ignoreMetaXml']) && filter_var($_GET['ignoreMetaXml'], FILTER_VALIDATE_BOOLEAN);
 
 if(isset($_GET['hierarchy']) && filter_var($_GET['hierarchy'], FILTER_VALIDATE_BOOLEAN)){
 	
-	$zipContent = new FileItemRecursive($folderName);
+	$zipContent = new FileItemRecursive($folderName, $ignoreMetaXml);
 	
 }
 else{
@@ -53,8 +41,10 @@ else{
 	$zipContent = [];
 	foreach($files as $file){
 		
-		if($file->isFile())
-			array_push($zipContent, new FileItem($file, $folderName));
+		if($file->isFile()){
+			if(!$ignoreMetaXml || $file->getFilename() != 'Package.xml' || !strstr($file->getFilename(), '-meta.xml')) 
+				array_push($zipContent, new FileItem($file, $folderName));	
+		}
 		else
 			rmdir($file->getRealpath());
 	}
@@ -93,7 +83,7 @@ class FileItemRecursive{
 	public $data;
 	public $extension;
 	
-	public function FileItemRecursive($extractPath){
+	public function FileItemRecursive($extractPath, $ignoreMetaXml){
 	
 		if(gettype($extractPath) == 'string'){
 			$this->name = $extractPath;
@@ -104,8 +94,10 @@ class FileItemRecursive{
 			foreach ($files as $fileInfo){
 				if($fileInfo->isDir())
 					array_push($this->children, new FileItemRecursive($extractPath . '/' . $fileInfo->getFilename()));
-				else
-					array_push($this->children, new FileItemRecursive($fileInfo));
+				else{
+					if(!$ignoreMetaXml || $fileInfo->getFilename() != 'Package.xml' || !strstr($fileInfo->getFilename(), '-meta.xml')) 
+						array_push($this->children, new FileItemRecursive($fileInfo));
+				}
 			}
 			rmdir($extractPath);
 		}
