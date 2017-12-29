@@ -42,7 +42,7 @@ else{
 	foreach($files as $file){
 		
 		if($file->isFile()){
-			if(includeFile($ignoreMetaXml, $file->getFilename()) 
+			if(includeFile($ignoreMetaXml, $file->getFilename()))
 				array_push($zipContent, new FileItem($file, $folderName));	
 		}
 		else
@@ -98,7 +98,7 @@ class FileItemRecursive{
 				if($fileInfo->isDir())
 					array_push($this->children, new FileItemRecursive($extractPath . '/' . $fileInfo->getFilename()));
 				else{
-					if(includeFile($ignoreMetaXml, $file->getFilename()) 
+					if(includeFile($ignoreMetaXml, $file->getFilename())) 
 						array_push($this->children, new FileItemRecursive($fileInfo));
 				}
 			}
