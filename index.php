@@ -3,7 +3,7 @@ header('Content-type: application/json');
 $folderName = uniqid();
 $zipFileName = $folderName . '.zip';
 
-contents('php://input');
+$zipStr = file_get_contents('php://input');
 
 if(!$zipStr){
 	http_response_code(400);
